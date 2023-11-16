@@ -2,18 +2,19 @@
 import json as _js
 import plotly as _pl
 import irispie as _ir
+import sys
 
 
-m = _ir.Model.from_file(
+m = _ir.Simultaneous.from_file(
     ["model-source/vanilla-rbc.model", "model-source/parameters.model"],
 )
 
-n = _ir.Model.from_file(
+n = _ir.Simultaneous.from_file(
     ["model-source/vanilla-rbc-stationarized.model", "model-source/parameters.model"],
     flat=True,
 )
 
-n.postprocessor = _ir.Sequential.from_file("model-source/vanilla-rbc-stationarized-postprocessor.model", )
+postprocessor = _ir.Sequential.from_file("model-source/vanilla-rbc-stationarized-postprocessor.model", )
 
 parameters = dict(
     alpha = 1.02**(1/4),
@@ -39,18 +40,17 @@ fix_level = ("a", )
 info = m.steady(
     fix_level=fix_level,
     flat=False,
-    iter_printer_settings={"every": 5, },
-)
-
-n.steady(
-    iter_printer_settings={"every": 5, },
 )
 
 chk, info = m.check_steady(when_fails="warning", )
-chk, info = n.check_steady(when_fails="warning", )
-
 m.solve()
+
+
+n.steady()
+
+chk, info = n.check_steady(when_fails="warning", )
 n.solve()
+
 
 start_sim = _ir.qq(2020,1)
 end_sim = _ir.qq(2040,4)
@@ -79,9 +79,16 @@ sn1, *_ = n.simulate(dn1, sim_range, )
 
 sn1['a'] = _ir.Series()
 sn1['a'][start_sim-1] = sm1['a'][start_sim-1]
-p = _ir.PlanSimulate(n.postprocessor, start_sim-1>>end_sim, )
+
+
+p = _ir.PlanSimulate(postprocessor, start_sim-1>>end_sim, )
 p.exogenize(start_sim-1, "a", when_data=True, )
-sn1, *_ = n.postprocess(sn1, start_sim-1>>end_sim, target_databox=sn1, plan=p, when_nonfinite="silent", )
+sn1, *_ = postprocessor.simulate(
+    sn1, start_sim-1>>end_sim,
+    plan=p,
+    when_nonfinite="silent",
+    target_databox=sn1,
+)
 
 
 chart_names = ("c", "i", "r", "a", )
