@@ -4,6 +4,7 @@ import plotly as _pl
 import irispie as _ir
 import sys
 
+_ir.min_irispie_version_required("0.22.0", )
 
 m = _ir.Simultaneous.from_file(
     ["model-source/vanilla-rbc.model", "model-source/parameters.model"],
@@ -14,7 +15,9 @@ n = _ir.Simultaneous.from_file(
     flat=True,
 )
 
-postprocessor = _ir.Sequential.from_file("model-source/vanilla-rbc-stationarized-postprocessor.model", )
+postprocessor = _ir.Sequential.from_file(
+    "model-source/vanilla-rbc-stationarized-postprocessor.model",
+)
 
 parameters = dict(
     alpha = 1.02**(1/4),
