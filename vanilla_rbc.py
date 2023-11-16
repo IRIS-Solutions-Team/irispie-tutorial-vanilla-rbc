@@ -4,7 +4,7 @@ import plotly as _pl
 import irispie as _ir
 import sys
 
-_ir.min_irispie_version_required("0.22.0", )
+_ir.min_irispie_version_required("0.22.1", )
 
 m = _ir.Simultaneous.from_file(
     ["model-source/vanilla-rbc.model", "model-source/parameters.model"],
