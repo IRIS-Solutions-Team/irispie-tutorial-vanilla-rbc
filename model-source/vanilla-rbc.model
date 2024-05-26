@@ -1,6 +1,5 @@
 
-    !transition-variables
-
+!transition-variables
     "Productivity" a
     "Productivity, Rate of change" roc_a
     "Gross production" y
@@ -14,19 +13,18 @@
     "Private investment to GDP ratio" i_to_y
 
 
-    !log-variables !all-but
+!log-variables !all-but
     c_to_y, i_to_y
 
 
-    !transition-shocks
-
+!unanticipated-shocks
     "Shock to productivity" shock_a
     "Shock to consumer preferences" shock_c
 
 
-    !transition-equations
+!transition-equations
 
-    log(roc_a) = rho*log(roc_a[-1]) + (1-rho)*log(alpha) + shock_a \
+    log(roc_a) = rho*log(roc_a[-1]) + (1-rho)*log(alpha) + shock_a ...
     !! roc_a = alpha;
 
     c[+1]/c = beta*r*exp(shock_c);

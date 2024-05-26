@@ -14,7 +14,7 @@
     !log-variables !all-but
         c_to_y, i_to_y
 
-    !transition-shocks
+    !unanticipated-shocks
         "Shock to productivity" shock_a
         "Shock to consumer preferences" shock_c
 
